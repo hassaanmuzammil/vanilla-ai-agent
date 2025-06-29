@@ -133,7 +133,7 @@ class Agent():
                 yield next_prompt
             
             elif "Final Answer:" in res:
-                break # Final answer flow separate, exit loop
+                break # Exit loop if final answer is provided
             else:
                 observation = "Missing `Action` or `Final Answer` in response."
 

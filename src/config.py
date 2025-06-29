@@ -13,6 +13,12 @@ DB_PASSWORD = os.environ.get("DB_PASSWORD")
 DB_HOST = os.environ.get("DB_HOST")
 DB_PORT = int(os.environ.get("DB_PORT"))
 
+CHAINLIT_DB_NAME = os.environ.get("CHAINLIT_DB_NAME")
+CHAINLIT_DB_USER = os.environ.get("CHAINLIT_DB_USER")
+CHAINLIT_DB_PASSWORD = os.environ.get("CHAINLIT_DB_PASSWORD")
+CHAINLIT_DB_HOST = os.environ.get("CHAINLIT_DB_HOST")
+CHAINLIT_DB_PORT = os.environ.get("CHAINLIT_DB_PORT")
+
 with open("../templates/sql_agent_json", "r") as f:
     SYSTEM_PROMPT_TEMPLATE = f.read()
 
