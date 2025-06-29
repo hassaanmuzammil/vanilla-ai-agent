@@ -16,3 +16,11 @@ llm = OpenAI(
     streaming=True,
     verbose=False,
 )
+
+if __name__ == "__main__":
+    
+    response = llm.invoke("User:Hello, how are you?\nAssistant:")
+    print(response)
+
+    for chunk in llm.stream("User: Tell me a joke.\nAssistant:"):
+        print(chunk, end="", flush=True)
