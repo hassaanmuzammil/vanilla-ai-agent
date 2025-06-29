@@ -114,7 +114,7 @@ class Agent():
                 res += chunk
                 yield chunk
 
-            if "Action: " in res:
+            if "Action:" in res:
                 try:
                     parsed = self.parse_action(res)
                     action = parsed["action"]
