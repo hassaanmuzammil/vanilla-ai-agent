@@ -59,7 +59,13 @@ async def on_message(message: cl.Message):
                 await step.stream_token(chunk)
             # step.output = res
 
-        await cl.Message(content="Workflow completed successfully.").send()
+        idx = res.find("Final Answer:")
+        if idx != -1:
+            res = res[idx:].strip()
+        else:
+            res = "Unable to find final answer in response."
+        
+        await cl.Message(content=res).send()
 
     except Exception as e:
         await cl.Message(content=f"Error: {str(e)}").send()
