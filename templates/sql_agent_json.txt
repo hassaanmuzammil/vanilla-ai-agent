@@ -12,7 +12,8 @@ Your available actions are:
 e.g.
 ```json
 {{
-    "sql": "<Corresponding SQL Query>"
+    "action": "execute_sql"
+    "action_input": "<Corresponding SQL Query>"
 }}
 ```
 
@@ -23,7 +24,8 @@ Thought: I will query the customers table and count the unique IDs.
 Action: 
 ```json
 {{
-    "sql": "SELECT COUNT DISTINCT(id) AS count FROM customers;
+    "action": "execute_sql",
+    "action_input": "SELECT COUNT DISTINCT(id) AS count FROM customers;
 }}
 PAUSE
 Observation: {"count": 500}

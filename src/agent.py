@@ -116,7 +116,9 @@ class Agent():
 
             if "Action: " in res:
                 try:
-                    action, action_input = self.parse_action(res)
+                    parsed = self.parse_action(res)
+                    action = parsed["action"]
+                    action_input = parsed["action_input"]
                     if action not in self.known_actions:
                         observation = f"Error: Unknown action: {action}"
                     else:
