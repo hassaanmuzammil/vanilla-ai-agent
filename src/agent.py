@@ -99,7 +99,7 @@ class Agent():
         }
 
     async def execute_tool(self, action, action_input):
-        observation = await self.known_actions["action"]("action_input")
+        observation = await self.known_actions["action"](action_input)
         return observation
 
     async def run(self, message):
