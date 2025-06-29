@@ -12,7 +12,7 @@ Your available actions are:
 e.g.
 ```json
 {{
-    "action": "execute_sql"
+    "action": "execute_sql",
     "action_input": "<Corresponding SQL Query>"
 }}
 ```
