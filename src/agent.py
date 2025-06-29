@@ -155,7 +155,7 @@ if __name__ == "__main__":
 
     async def main():
         async for response in agent.run("Provide the total number of orders made today?"):
-            print(response)
+            print(response, end="", flush=True)
 
     import asyncio
     asyncio.run(main())
