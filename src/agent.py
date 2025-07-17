@@ -16,6 +16,7 @@ class Agent():
         self.known_actions = known_actions
         self.stop_words = stop_words
         self.react_json = react_json
+        self.max_iterations = max_iterations
         self.messages = []
         if self.system_prompt:
             self.messages.append({"role": "system", "content": self.system_prompt})
@@ -23,12 +24,12 @@ class Agent():
     async def generate(self, prompt):
         stop = False
         res = ""
-        async for chunk in self.llm.stream(prompt):
+        for chunk in self.llm.stream(prompt):
             res += chunk
             yield chunk
 
             for word in self.stop_words:
-                if word in res[-10:]:
+                if word in res:
                     stop = True
                     break
             if stop:
@@ -67,7 +68,7 @@ class Agent():
             """
             # from langchain.agents.output_parsers.react_json_single_input import ReactJsonSingleInputOutputParser
             # self.parser = ReactJsonSingleInputOutputParser()
-            # parsed = self.parser.parse(response)
+            # parsed = self.parser.parse(text)
             # action = parsed.tool
             # action_input = parsed.tool_input
             pattern = re.compile(r"^.*?`{3}(?:json)?\n?(.*?)`{3}.*?$", re.DOTALL)
@@ -99,7 +100,7 @@ class Agent():
         }
 
     async def execute_tool(self, action, action_input):
-        observation = await self.known_actions["action"](action_input)
+        observation = await self.known_actions[action](action_input)
         return observation
 
     async def run(self, message):
@@ -109,27 +110,36 @@ class Agent():
             self.messages.append({"role": "user", "content": next_prompt})
 
             prompt = self.apply_chat_template(self.messages)
+            
             res = ""
             async for chunk in self.generate(prompt):
                 res += chunk
                 yield chunk
+            self.messages.append({"role": "assistant", "content": res})
 
             if "Action:" in res:
                 try:
                     parsed = self.parse_action(res)
                     action = parsed["action"]
                     action_input = parsed["action_input"]
-                    if action not in self.known_actions:
-                        observation = f"Error: Unknown action: {action}"
-                    else:
-                        observation = await self.execute_tool(action, action_input)
                 except Exception as e:
                     observation = (
                         "Error: Failed to parse action from response. "
                         "Carefully review the `Thought`, `Action`, `Action Input` format. "
                         f"Details: {str(e)}"
                     )
-                next_prompt = f"{observation}\n"
+                    next_prompt = f"\nObservation: {observation}\n"
+                    yield next_prompt
+                    continue
+
+                if action not in self.known_actions:
+                    observation = f"Error: Unknown action: {action}"
+                else:
+                    try:
+                        observation = await self.execute_tool(action, action_input)
+                    except Exception as e:
+                        observation = f"Error: Failed to execute tool: `{action}`. Details: {str(e)}"
+                next_prompt = f"\nObservation: {observation}\n"
                 yield next_prompt
             
             elif "Final Answer:" in res:
@@ -142,21 +152,22 @@ class Agent():
 if __name__ == "__main__":
     
     from src.llm import llm
-    from src.config import SYSTEM_PROMPT_TEMPLATE, KNOWN_ACTIONS, DB_SCHEMA
+    from src.config import SYSTEM_PROMPT_TEMPLATE, DB_SCHEMA
+    from src.db import execute_sql
 
     system_prompt = SYSTEM_PROMPT_TEMPLATE.format(schema=DB_SCHEMA)
 
     agent = Agent(
         llm=llm,
         system_prompt=system_prompt,
-        known_actions=KNOWN_ACTIONS,
+        known_actions={"execute_sql": execute_sql},
         react_json=True,
         max_iterations=10,
         stop_words=("PAUSE",)
     )
 
     async def main():
-        async for response in agent.run("Provide the total number of orders made today?"):
+        async for response in agent.run("Provide the total number of orders by their statuses?"):
             print(response, end="", flush=True)
 
     import asyncio
