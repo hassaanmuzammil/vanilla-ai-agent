@@ -7,8 +7,26 @@ An end-to-end AI agent built from first principles — minimal libraries, no sho
 Setup [uv](https://github.com/astral-sh/uv) and install packages
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
-uv pip install
+uv pip install -e .
 ```
+
+## Setup Chainlit Database
+```sh
+cd database
+docker compose up -d chainlit_db
+```
+Execute the following script to apply the physical data model: [`Chainlit DB Schema`](./database/scripts/chainlit_schema.sql)
+
+## Setup Dummy Target Database (For testing purposes)
+```sh
+cd database
+docker compose up -d postgres_db
+```
+Execute the following script to apply the physical data model: 
+- [`DB Schema`](./database/scripts/schema.sql)
+- [`Dummy Data`](./database/scripts/dummy_data.sql)
+
+
 ## 🚀 Run the App
 Start the Chainlit UI (make sure required environment variables are set):
 
