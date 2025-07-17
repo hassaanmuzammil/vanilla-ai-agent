@@ -19,10 +19,10 @@ CHAINLIT_DB_PASSWORD = os.environ.get("CHAINLIT_DB_PASSWORD")
 CHAINLIT_DB_HOST = os.environ.get("CHAINLIT_DB_HOST")
 CHAINLIT_DB_PORT = os.environ.get("CHAINLIT_DB_PORT")
 
-with open("../templates/sql_agent_json", "r") as f:
+with open("templates/sql_agent_json.txt", "r") as f:
     SYSTEM_PROMPT_TEMPLATE = f.read()
 
-with open("../database/schema.sql", "r") as f:
+with open("database/scripts/schema.sql", "r") as f:
     DB_SCHEMA = f.read()
 
 KNOWN_ACTIONS = {

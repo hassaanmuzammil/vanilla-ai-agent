@@ -141,8 +141,8 @@ class Agent():
 
 if __name__ == "__main__":
     
-    from llm import llm
-    from config import SYSTEM_PROMPT_TEMPLATE, KNOWN_ACTIONS, DB_SCHEMA
+    from src.llm import llm
+    from src.config import SYSTEM_PROMPT_TEMPLATE, KNOWN_ACTIONS, DB_SCHEMA
 
     system_prompt = SYSTEM_PROMPT_TEMPLATE.format(schema=DB_SCHEMA)
 

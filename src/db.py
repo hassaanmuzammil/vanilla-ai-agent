@@ -1,7 +1,7 @@
 import asyncio
 import asyncpg
 
-from config import DB_USER, DB_PASSWORD, DB_NAME, DB_HOST, DB_PORT
+from src.config import DB_USER, DB_PASSWORD, DB_NAME, DB_HOST, DB_PORT
 
 async def execute_sql(query):
     conn = await asyncpg.connect(
