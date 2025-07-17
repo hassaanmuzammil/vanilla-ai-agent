@@ -32,15 +32,16 @@ BEGIN
         VALUES (
             (SELECT id FROM customers ORDER BY random() LIMIT 1),
             CURRENT_DATE - (random() * 30)::int,
-            (ARRAY['pending', 'shipped', 'delivered', 'canceled'])[floor(random() * 4 + 1)]
+            (ARRAY['pending', 'shipped', 'delivered', 'canceled'])[floor(random() * 4)::int + 1]
         );
     END LOOP;
-END$$;
+END
+$$;
 
 -- Add 1 to 5 items to each order
 DO $$
 DECLARE
-    order_id INT;
+    order_row RECORD;
     num_items INT;
     i INT;
     product_id INT;
@@ -48,14 +49,15 @@ DECLARE
     price NUMERIC;
 BEGIN
     FOR order_row IN SELECT id FROM orders LOOP
-        num_items := floor(random() * 5 + 1);
+        num_items := floor(random() * 5 + 1)::int;
         FOR i IN 1..num_items LOOP
             product_id := (SELECT id FROM products ORDER BY random() LIMIT 1);
-            quantity := floor(random() * 3 + 1);
-            price := (SELECT price FROM products WHERE id = product_id);
+            quantity := floor(random() * 3 + 1)::int;
+            price := (SELECT p.price FROM products p WHERE p.id = product_id);
             
             INSERT INTO order_items (order_id, product_id, quantity, price_at_purchase)
             VALUES (order_row.id, product_id, quantity, price);
         END LOOP;
     END LOOP;
-END$$;
+END
+$$;
