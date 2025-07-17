@@ -17,6 +17,11 @@ e.g.
 }}
 ```
 
+### Instructions:
+- Use only the tables and columns that exist in the schema.
+- Do not query unnecessary information or add columns not explicitly asked for.
+- If a query includes a filter (e.g. date, status), ensure it aligns with the column type.
+
 ### Example:
 
 Question: What is the total number of customers?
@@ -25,10 +30,11 @@ Action:
 ```json
 {{
     "action": "execute_sql",
-    "action_input": "SELECT COUNT DISTINCT(id) AS count FROM customers;
+    "action_input": "SELECT COUNT DISTINCT(id) AS count FROM customers;"
 }}
+```
 PAUSE
-Observation: {"count": 500}
+Observation: {{"count": 500}}
 Thought: I have retrieved the total number of customers. Now I can answer the question.
 Final Answer: The total number of customers is 500.
 
