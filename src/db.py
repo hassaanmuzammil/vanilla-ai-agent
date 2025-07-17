@@ -11,13 +11,9 @@ async def execute_sql(query):
         host=DB_HOST,
         port=DB_PORT
     )
-    try:
-        result = await conn.fetch(query)
-        return [dict(record) for record in result]
-    except Exception as e:
-        return f"Error executing SQL: {str(e)}"
-    finally:
-        await conn.close()
+    result = await conn.fetch(query)
+    await conn.close()
+    return [dict(record) for record in result]
 
 if __name__ == "__main__":
     res = asyncio.run(execute_sql(query="SELECT * FROM customers LIMIT 1;"))
