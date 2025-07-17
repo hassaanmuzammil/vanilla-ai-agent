@@ -1,9 +1,9 @@
 import chainlit as cl
 import chainlit.data as cl_data
-from chainlit.data.sqlalchemy import SQLAlchemyDataLayer
+from chainlit.data.sql_alchemy import SQLAlchemyDataLayer
 
 from src.agent import Agent
-from src.config import SYSTEM_PROMPT_TEMPLATE, KNOWN_ACTIONS, DB_SCHEMA
+from src.config import SYSTEM_PROMPT_TEMPLATE, DB_SCHEMA
 from src.config import (
     CHAINLIT_DB_NAME,
     CHAINLIT_DB_USER,
@@ -14,14 +14,24 @@ from src.config import (
 from src.llm import llm
 
 conn_info = f"postgresql+asyncpg://{CHAINLIT_DB_USER}:{CHAINLIT_DB_PASSWORD}@{CHAINLIT_DB_HOST}:{CHAINLIT_DB_PORT}/{CHAINLIT_DB_NAME}"
-cl_data.data_layer = SQLAlchemyDataLayer(conn_info, ssl_require=False)
+storage_client = None
+
+from src.db import execute_sql
+known_actions = {"execute_sql": execute_sql}
+
+@cl.data_layer
+def get_data_layer():
+    return SQLAlchemyDataLayer(
+        conninfo=conn_info, 
+        storage_provider=storage_client
+    )
 
 @cl.on_chat_start
 async def on_chat_start():
     cl.user_session.set("llm", llm)
     system_prompt = SYSTEM_PROMPT_TEMPLATE.format(schema=DB_SCHEMA)
     cl.user_session.set("system_prompt", system_prompt)
-    cl.user_session.set("known_actions", KNOWN_ACTIONS)
+    cl.user_session.set("known_actions", known_actions)
     
 
 @cl.password_auth_callback
@@ -29,8 +39,8 @@ async def password_auth_callback(username: str, password: str):
     # Dummy auth logic
     if username == "admin" and password == "password":
         return cl.User(
-            id="admin",
-            name="Administrator"
+            identifier="admin", metadata={"role": "admin", "provider": "credentials"},
+            display_name="Admin",
         )
     return False
 
@@ -48,7 +58,7 @@ async def on_message(message: cl.Message):
             system_prompt=system_prompt,
             known_actions=known_actions,
             react_json=True,
-            max_iterations=10,
+            max_iterations=5,
             stop_words=("PAUSE",)
         )
 
