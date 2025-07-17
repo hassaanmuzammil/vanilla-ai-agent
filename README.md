@@ -38,5 +38,5 @@ chainlit run main.py --host 0.0.0.0 --port 8000 -h
 
 Watch a demo of `vanilla-ai-agent` in action:
 
-[🎥 Demo Video](docs/sample.mov)
+[🎥 Demo Video](docs/sample.mp4)
 
