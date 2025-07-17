@@ -24,7 +24,3 @@ with open("templates/sql_agent_json.txt", "r") as f:
 
 with open("database/scripts/schema.sql", "r") as f:
     DB_SCHEMA = f.read()
-
-KNOWN_ACTIONS = {
-    "execute_sql": "execute_sql",
-}
