@@ -10,7 +10,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 uv pip install -e .
 ```
 
-## Setup Chainlit Database
+## Setup Chainlit Database
 ```sh
 cd database
 docker compose up -d chainlit_db
