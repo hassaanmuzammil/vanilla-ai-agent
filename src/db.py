@@ -20,4 +20,5 @@ async def execute_sql(query):
         await conn.close()
 
 if __name__ == "__main__":
-    asyncio.run(main(query="SELECT * FROM customers;"))
+    res = asyncio.run(execute_sql(query="SELECT * FROM customers LIMIT 1;"))
+    print(res)
