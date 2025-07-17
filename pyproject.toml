@@ -9,4 +9,5 @@ dependencies = [
     "chainlit>=2.3.0",
     "langchain-openai>=0.3.27",
     "python-dotenv>=1.1.1",
+    "sqlalchemy>=2.0.41",
 ]
