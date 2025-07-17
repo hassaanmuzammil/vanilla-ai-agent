@@ -31,6 +31,8 @@ class Agent():
             for word in self.stop_words:
                 if word in res:
                     stop = True
+                    index = res.find(word)
+                    res = res[:index + len(word)]
                     break
             if stop:
                 break
