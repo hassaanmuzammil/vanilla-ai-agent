@@ -33,3 +33,10 @@ Start the Chainlit UI (make sure required environment variables are set):
 ```bash
 chainlit run main.py --host 0.0.0.0 --port 8000 -h
 ```
+
+## Text-to-SQL Example
+
+Watch a demo of `vanilla-ai-agent` in action:
+
+[🎥 Demo Video](docs/sample.mov)
+
