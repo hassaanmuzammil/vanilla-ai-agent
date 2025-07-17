@@ -38,7 +38,4 @@ chainlit run main.py --host 0.0.0.0 --port 8000 -h
 
 Watch a demo of `vanilla-ai-agent` in action:
 
-<video width="720" controls>
-  <source src="docs/sample.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+[![Watch Demo](docs/sample.gif)](docs/sample.mp4)
